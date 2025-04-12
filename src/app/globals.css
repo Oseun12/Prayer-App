@@ -121,12 +121,12 @@
   }
 }
 
-body {
+/* body {
   @apply bg-gray-900 text-white;
 }
 
 /* Custom animations */
-.animate-float {
+/* .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
@@ -137,4 +137,4 @@ body {
   50% {
     transform: translateY(-20px);
   }
-}
+} */
