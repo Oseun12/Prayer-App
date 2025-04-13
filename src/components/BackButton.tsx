@@ -1,9 +1,13 @@
 import Link from 'next/link';
 
-export default function BackButton() {
+interface BackButtonProps {
+  className?: string;
+}
+
+export default function BackButton({ className = '' }: BackButtonProps)  {
   return (
     <Link href="/" className="absolute left-4 top-6">
-      <button className="flex items-center text-indigo-600 hover:text-indigo-800">
+      <button className={`flex items-center text-white hover:text-gray-300 ${className}`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 mr-1"
