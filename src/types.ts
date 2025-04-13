@@ -6,6 +6,13 @@ export type Prayer = {
     verse?: string;
   };
 
+export type Bookmarks = {
+  id: string;
+  prayerId: number;
+  userId: string;
+  createdAt: string;
+};
+
   type PrayerSlug = keyof typeof allPrayers;
 
   declare module 'next' {

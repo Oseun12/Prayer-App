@@ -13,7 +13,7 @@ export default function HomePage() {
       description: 'Strengthen your belief and trust in God',
       icon: <FaCross className="w-8 h-8" />,
       color: 'from-blue-600 to-blue-800',
-      prayerCount: 127,
+      prayerCount: 80,
       verse: 'Hebrews 11:1'
     },
     {
@@ -23,7 +23,7 @@ export default function HomePage() {
       description: 'Find comfort and strength during trials',
       icon: <GiAngelWings className="w-8 h-8" />,
       color: 'from-purple-600 to-purple-800',
-      prayerCount: 89,
+      prayerCount: 80,
       verse: 'Psalm 34:17'
     },
     {
@@ -33,7 +33,7 @@ export default function HomePage() {
       description: 'Seek God\'s compassion and forgiveness',
       icon: <FaHeart className="w-8 h-8" />,
       color: 'from-rose-600 to-rose-800',
-      prayerCount: 64,
+      prayerCount: 60,
       verse: 'Lamentations 3:22'
     },
     {
@@ -43,7 +43,7 @@ export default function HomePage() {
       description: 'Ask for divine assistance in your needs',
       icon: <FaHandsHelping className="w-8 h-8" />,
       color: 'from-emerald-600 to-emerald-800',
-      prayerCount: 72,
+      prayerCount: 60,
       verse: 'Psalm 121:1'
     },
     {
@@ -53,7 +53,7 @@ export default function HomePage() {
       description: 'Freedom from bondage and oppression',
       icon: <FaDove className="w-8 h-8" />,
       color: 'from-amber-600 to-amber-800',
-      prayerCount: 58,
+      prayerCount: 60,
       verse: 'Psalm 34:4'
     },
     {
@@ -63,7 +63,7 @@ export default function HomePage() {
       description: 'Express gratitude for God\'s blessings',
       icon: <FaStar className="w-8 h-8" />,
       color: 'from-pink-600 to-pink-800',
-      prayerCount: 43,
+      prayerCount: 60,
       verse: '1 Thessalonians 5:18'
     },
     {
@@ -73,7 +73,7 @@ export default function HomePage() {
       description: 'Physical, emotional and spiritual restoration',
       icon: <GiHealing className="w-8 h-8" />,
       color: 'from-teal-600 to-teal-800',
-      prayerCount: 56,
+      prayerCount: 60,
       verse: 'Jeremiah 17:14'
     },
     {
@@ -83,7 +83,7 @@ export default function HomePage() {
       description: 'Divine covering and spiritual safety',
       icon: <FaPrayingHands className="w-8 h-8" />,
       color: 'from-indigo-600 to-indigo-800',
-      prayerCount: 48,
+      prayerCount: 60,
       verse: 'Psalm 91:4'
     },
     {
@@ -93,7 +93,7 @@ export default function HomePage() {
       description: 'Guidance and discernment in decisions',
       icon: <GiSpellBook className="w-8 h-8" />,
       color: 'from-violet-600 to-violet-800',
-      prayerCount: 39,
+      prayerCount: 60,
       verse: 'James 1:5'
     },
     {
@@ -103,7 +103,7 @@ export default function HomePage() {
       description: 'Calmness in the midst of storms',
       icon: <FaPeace className="w-8 h-8" />,
       color: 'from-cyan-600 to-cyan-800',
-      prayerCount: 51,
+      prayerCount: 60,
       verse: 'Philippians 4:7'
     },
     {
@@ -113,7 +113,7 @@ export default function HomePage() {
       description: 'Blessings over your household',
       icon: <BsHeartPulse className="w-8 h-8" />,
       color: 'from-fuchsia-600 to-fuchsia-800',
-      prayerCount: 67,
+      prayerCount: 60,
       verse: 'Joshua 24:15'
     },
     {
@@ -123,7 +123,7 @@ export default function HomePage() {
       description: 'Powerful prayers from God\'s Word',
       icon: <FaBible className="w-8 h-8" />,
       color: 'from-orange-600 to-orange-800',
-      prayerCount: 82,
+      prayerCount: 60,
       verse: 'Hebrews 4:12'
     }
   ];
@@ -202,14 +202,12 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black/30 border-t border-white/10 py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-white/80 mb-6">
-            May the Lord bless you and keep you as you seek Him in prayer
-          </p>
-          <div className="text-sm text-white/50">
-            © {new Date().getFullYear()} Divine Prayer Collection. All rights reserved.
-          </div>
+      <footer className="py-8 text-center text-gray-500 text-sm border-t border-gray-800/50">
+        <p className="italic">&ldquo;The prayer of a righteous person is powerful and effective.&rdquo; — James 5:16</p>
+        <div className="mt-4">
+          <a href="/profile" className="text-blue-400 hover:underline">
+            My Prayer Profile
+          </a>
         </div>
       </footer>
     </div>

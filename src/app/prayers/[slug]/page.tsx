@@ -2,6 +2,8 @@ import BackButton from '@/components/BackButton';
 import PrayerPoint from '@/components/PrayerPoint';
 import { notFound } from 'next/navigation';
 import { allPrayers, categoryTitles, categoryColors, accentColors, categoryIcons } from '@/lib/prayerData';
+import BookmarkButton from '@/components/BookmarkButton';
+import PrayedButton from '@/components/PrayedButton';
 
 export async function generateStaticParams() {
   return Object.keys(allPrayers).map((slug) => ({ slug }));
@@ -56,15 +58,26 @@ export default async function PrayerCategoryPage({ params }: { params: Promise<{
               data-aos="fade-up"
               data-aos-delay={index * 50}
             >
-              {/* Prayer card with gradient border */}
+              {/* Prayer card with gradient border  */}
               <div className={`relative bg-gray-900/60 backdrop-blur-sm p-6 border-l-4 ${accentColor.replace('text', 'border')}`}>
+                {/* Prayer content */}
+                <div>
+                  <PrayerPoint prayer={prayer} className="text-gray-100 leading-relaxed" />
+                  {prayer.verse && (
+                    <div className={`mt-3 text-sm ${accentColor} italic`}>
+                      {prayer.verse}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Buttons container at bottom-right */}
+                <div className="flex justify-end gap-2 mt-4">
+                  <BookmarkButton prayerId={prayer.id} />
+                  <PrayedButton prayerId={prayer.id} />
+                </div>
+                
+                {/* Glow effect */}
                 <div className={`absolute inset-0 rounded-lg ${accentColor.replace('text', 'bg')} opacity-0 group-hover:opacity-10 transition-opacity`}></div>
-                <PrayerPoint prayer={prayer} className="text-gray-100 leading-relaxed" />
-                {prayer.verse && (
-                  <div className={`mt-3 text-sm ${accentColor} italic`}>
-                    {prayer.verse}
-                  </div>
-                )}
               </div>
             </div>
           ))}
