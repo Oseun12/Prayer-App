@@ -13,17 +13,13 @@ export async function generateStaticParams() {
 //   };
 // }
 
-export default async function PrayerCategoryPage({
-  params
-}: {
-  params: { slug: string }
-}) {
-  const { slug } = params;
-
+export default async function PrayerCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;  
+  
   if (!(slug in allPrayers)) {
     return notFound();
   }
-  
+
   const currentPrayers = allPrayers[slug as keyof typeof allPrayers];
   const categoryTitle = categoryTitles[slug as keyof typeof categoryTitles];
   const gradientColors = categoryColors[slug as keyof typeof categoryColors];
