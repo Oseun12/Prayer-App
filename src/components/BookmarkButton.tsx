@@ -1,44 +1,66 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+
+
 
 export default function BookmarkButton({ prayerId }: { prayerId: number }) {
+  const { data: session } = useSession();
   const [bookmarked, setBookmarked] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const fetchBookmarks = async () => {
+    if (!session) return;
+    
+    try {
+      const res = await fetch('/api/bookmarks');
+      if (!res.ok) throw new Error('Failed to fetch bookmarks');
+      
+      const data = await res.json();
+      setBookmarked(data.some((b: { prayerId: number }) => b.prayerId === prayerId));
+    } catch (error) {
+      console.error('Bookmark check error:', error);
+    }
+  };
+
   const toggleBookmark = async () => {
+    console.log('Toggling bookmark for prayerId:', prayerId); 
+    console.log('Current bookmarked state:', bookmarked); 
+    
     setLoading(true);
     try {
+      const method = bookmarked ? 'DELETE' : 'POST';
+      console.log('Sending', method, 'request'); 
+      
       const response = await fetch('/api/bookmarks', {
-        method: bookmarked ? 'DELETE' : 'POST',
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prayerId })
+        body: JSON.stringify({ prayerId }),
+        credentials: 'include' 
       });
-
-      if (response.ok) {
-        setBookmarked(!bookmarked);
-      } else {
-        console.error('Failed to update bookmark');
+  
+      console.log('Response status:', response.status); 
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response:', errorData); 
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+  
+      const data = await response.json();
+      console.log('Success:', data); 
+      setBookmarked(!bookmarked);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Bookmark toggle error:', error); 
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    async function checkBookmark() {
-      try {
-        const res = await fetch('/api/bookmarks');
-        const data = await res.json();
-        setBookmarked(data.some((b: { prayerId: number }) => b.prayerId === prayerId));
-      } catch (error) {
-        console.error('Failed to fetch bookmarks:', error);
-      }
-    }
-    checkBookmark();
-  }, [prayerId]);
+    fetchBookmarks();
+  }, [prayerId, session]);
 
   return (
     <button
