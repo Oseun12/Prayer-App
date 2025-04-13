@@ -8,6 +8,7 @@ export default function HomePage() {
   const prayerCategories = [
     {
       id: 'faith',
+      slug: 'faith',
       title: 'Prayers of Faith',
       description: 'Strengthen your belief and trust in God',
       icon: <FaCross className="w-8 h-8" />,
@@ -17,6 +18,7 @@ export default function HomePage() {
     },
     {
       id: 'difficult-times',
+      slug: 'difficult-times',
       title: 'Prayers in Hard Times',
       description: 'Find comfort and strength during trials',
       icon: <GiAngelWings className="w-8 h-8" />,
@@ -26,6 +28,7 @@ export default function HomePage() {
     },
     {
       id: 'mercy',
+      slug: 'mercy',
       title: 'Prayers for Mercy',
       description: 'Seek God\'s compassion and forgiveness',
       icon: <FaHeart className="w-8 h-8" />,
@@ -35,6 +38,7 @@ export default function HomePage() {
     },
     {
       id: 'help',
+      slug: 'help',
       title: 'Prayers for Help',
       description: 'Ask for divine assistance in your needs',
       icon: <FaHandsHelping className="w-8 h-8" />,
@@ -44,6 +48,7 @@ export default function HomePage() {
     },
     {
       id: 'deliverance',
+      slug: 'deliverance',
       title: 'Deliverance Prayers',
       description: 'Freedom from bondage and oppression',
       icon: <FaDove className="w-8 h-8" />,
@@ -53,6 +58,7 @@ export default function HomePage() {
     },
     {
       id: 'thanksgiving',
+      slug: 'thanksgiving',
       title: 'Thanksgiving Prayers',
       description: 'Express gratitude for God\'s blessings',
       icon: <FaStar className="w-8 h-8" />,
@@ -60,9 +66,9 @@ export default function HomePage() {
       prayerCount: 43,
       verse: '1 Thessalonians 5:18'
     },
-    // New Categories
     {
       id: 'healing',
+      slug: 'healing',
       title: 'Healing Prayers',
       description: 'Physical, emotional and spiritual restoration',
       icon: <GiHealing className="w-8 h-8" />,
@@ -72,6 +78,7 @@ export default function HomePage() {
     },
     {
       id: 'protection',
+      slug: 'protection',
       title: 'Protection Prayers',
       description: 'Divine covering and spiritual safety',
       icon: <FaPrayingHands className="w-8 h-8" />,
@@ -81,6 +88,7 @@ export default function HomePage() {
     },
     {
       id: 'wisdom',
+      slug: 'wisdom',
       title: 'Wisdom Prayers',
       description: 'Guidance and discernment in decisions',
       icon: <GiSpellBook className="w-8 h-8" />,
@@ -90,6 +98,7 @@ export default function HomePage() {
     },
     {
       id: 'peace',
+      slug: 'peace',
       title: 'Peace Prayers',
       description: 'Calmness in the midst of storms',
       icon: <FaPeace className="w-8 h-8" />,
@@ -99,6 +108,7 @@ export default function HomePage() {
     },
     {
       id: 'family',
+      slug: 'family',
       title: 'Family Prayers',
       description: 'Blessings over your household',
       icon: <BsHeartPulse className="w-8 h-8" />,
@@ -108,6 +118,7 @@ export default function HomePage() {
     },
     {
       id: 'forgiveness',
+      slug: 'forgiveness',
       title: 'Forgiveness Prayers',
       description: 'Powerful prayers from God\'s Word',
       icon: <FaBible className="w-8 h-8" />,

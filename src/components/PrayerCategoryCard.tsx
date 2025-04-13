@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 interface PrayerCategory {
   id: string;
+  slug: string; 
   title: string;
   description: string;
   icon: React.ReactNode;
@@ -12,7 +13,7 @@ interface PrayerCategory {
 
 export default function PrayerCategoryCard({ category }: { category: PrayerCategory }) {
   return (
-    <Link href={`/prayers/${category.id}`} className="group">
+    <Link href={`/prayers/${category.slug}`} className="group">
       <div className={`h-full bg-gradient-to-br ${category.color} rounded-xl shadow-lg overflow-hidden transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-xl relative`}>
         {/* Glow effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
