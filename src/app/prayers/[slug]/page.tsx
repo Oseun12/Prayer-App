@@ -2,19 +2,25 @@ import BackButton from '@/components/BackButton';
 import PrayerPoint from '@/components/PrayerPoint';
 import { notFound } from 'next/navigation';
 import { allPrayers, categoryTitles, categoryColors, accentColors, categoryIcons } from '@/lib/prayerData';
-import { PageProps } from '@/types';
 
 export async function generateStaticParams() {
-  return Object.keys(allPrayers).map((slug) => ({
-    slug,
-  }));
+  return Object.keys(allPrayers).map((slug) => ({ slug }));
 }
 
+// interface PageProps {
+//   params: {
+//     slug: string;
+//   };
+// }
 
-export default async function PrayerCategoryPage({ params }: PageProps) {
+export default async function PrayerCategoryPage({
+  params
+}: {
+  params: { slug: string }
+}) {
   const { slug } = await params;
   
-  if (!slug || !allPrayers[slug as keyof typeof allPrayers]) {
+  if (!(slug in allPrayers)) {
     return notFound();
   }
   const currentPrayers = allPrayers[slug as keyof typeof allPrayers];

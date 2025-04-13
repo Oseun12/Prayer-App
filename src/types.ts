@@ -13,3 +13,10 @@ export interface PageProps {
     slug: PrayerSlug;
   };
 }
+
+
+declare module 'next' {
+  interface PageProps {
+    params: Record<string, string | string[]>;
+  }
+}

@@ -24,7 +24,7 @@ export const allPrayers = {
     'peace': peacePrayers,
     'family': familyPrayers,
     'forgiveness': forgivenessPrayers
-  };
+  } as const;
   
   export const categoryTitles = {
     'faith': 'Prayers of Faith',
