@@ -18,7 +18,7 @@ export default async function PrayerCategoryPage({
 }: {
   params: { slug: string }
 }) {
-  const { slug } = await params;
+  const { slug } = params;
   
   if (!(slug in allPrayers)) {
     return notFound();
