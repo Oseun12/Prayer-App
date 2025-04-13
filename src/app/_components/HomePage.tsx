@@ -182,10 +182,11 @@ export default function HomePage() {
           </div>
           <blockquote className="relative z-10 text-center max-w-3xl mx-auto">
             <p className="text-2xl italic text-white/90 leading-relaxed">
-              &ldquo;Prayer is not asking. It is a longing of the soul. It is daily admission of one&apos;s weakness. It is better in prayer to have a heart without words than words without a heart.&rdquo;
+              &ldquo;I pray because I can&apos;t help myself. I pray because I&apos;m helpless. I pray because the need flows out of me all the time, waking and sleeping. It doesn&apos;t change God, it changes me.&rdquo;
             </p>
-            <footer className="mt-6 text-purple-300 font-medium">— Mahatma Gandhi</footer>
+            <footer className="mt-6 text-purple-300 font-medium">— C.S. Lewis</footer>
           </blockquote>
+
         </div>
       </main>
 
