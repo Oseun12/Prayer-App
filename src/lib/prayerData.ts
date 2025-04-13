@@ -25,6 +25,12 @@ export const allPrayers = {
     'family': familyPrayers,
     'forgiveness': forgivenessPrayers
   } as const;
+
+  export type PrayerSlug = keyof typeof allPrayers;
+
+  export function isValidSlug(slug: string): slug is PrayerSlug {
+    return slug in allPrayers;
+  }
   
   export const categoryTitles = {
     'faith': 'Prayers of Faith',
@@ -87,8 +93,3 @@ export const allPrayers = {
   };
 
   
-export type PrayerSlug = keyof typeof allPrayers;
-
-export function isValidSlug(slug: string): slug is PrayerSlug {
-  return slug in allPrayers;
-}

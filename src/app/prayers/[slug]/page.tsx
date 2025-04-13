@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 //   };
 // }
 
-export default async function PrayerCategoryPage({
+export default function PrayerCategoryPage({
   params
 }: {
   params: { slug: string }

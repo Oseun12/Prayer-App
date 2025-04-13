@@ -6,17 +6,10 @@ export type Prayer = {
     verse?: string;
   };
 
-export type PrayerSlug = keyof typeof allPrayers;
+  type PrayerSlug = keyof typeof allPrayers;
 
-export interface PageProps {
-  params: {
-    slug: PrayerSlug;
-  };
-}
-
-
-declare module 'next' {
-  interface PageProps {
-    params: Record<string, string | string[]>;
+  declare module 'next' {
+    interface PageProps {
+      params: { slug: string } | { slug: PrayerSlug };
+    }
   }
-}
