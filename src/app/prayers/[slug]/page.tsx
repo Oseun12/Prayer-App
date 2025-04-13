@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation';
 import { allPrayers, categoryTitles, categoryColors, accentColors, categoryIcons } from '@/lib/prayerData';
 
 export async function generateStaticParams() {
-  return Object.keys(allPrayers).map((category) => ({
-    category,
+  return Object.keys(allPrayers).map((slug) => ({
+    slug,
   }));
 }
 
