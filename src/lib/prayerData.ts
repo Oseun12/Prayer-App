@@ -87,3 +87,8 @@ export const allPrayers = {
   };
 
   
+export type PrayerSlug = keyof typeof allPrayers;
+
+export function isValidSlug(slug: string): slug is PrayerSlug {
+  return slug in allPrayers;
+}
