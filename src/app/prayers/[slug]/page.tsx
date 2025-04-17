@@ -2,6 +2,9 @@ import BackButton from '@/components/BackButton';
 import PrayerPoint from '@/components/PrayerPoint';
 import { notFound } from 'next/navigation';
 import { allPrayers, categoryTitles, categoryColors, accentColors, categoryIcons } from '@/lib/prayerData';
+import { PiHandsPrayingLight } from "react-icons/pi";
+import { IoBookmarkOutline } from "react-icons/io5";
+
 
 export async function generateStaticParams() {
   return Object.keys(allPrayers).map((slug) => ({ slug }));
@@ -60,11 +63,29 @@ export default async function PrayerCategoryPage({ params }: { params: Promise<{
               <div className={`relative bg-gray-900/60 backdrop-blur-sm p-6 border-l-4 ${accentColor.replace('text', 'border')}`}>
                 <div className={`absolute inset-0 rounded-lg ${accentColor.replace('text', 'bg')} opacity-0 group-hover:opacity-10 transition-opacity`}></div>
                 <PrayerPoint prayer={prayer} className="text-gray-100 leading-relaxed" />
-                {prayer.verse && (
-                  <div className={`mt-3 text-sm ${accentColor} italic`}>
-                    {prayer.verse}
+                
+                <div className="flex justify-between items-end mt-3">
+                  {prayer.verse && (
+                    <div className={`text-sm ${accentColor} italic`}>
+                      {prayer.verse}
+                    </div>
+                  )}
+                  
+                  <div className={`flex gap-3 ${prayer.verse ? '' : 'ml-auto'}`}>
+                    <button 
+                      className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors`}
+                      aria-label="Bookmark this prayer"
+                    >
+                      <IoBookmarkOutline className="text-lg" />
+                    </button>
+                    <button 
+                      className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors`}
+                      aria-label="Mark as prayed"
+                    >
+                      <PiHandsPrayingLight className="text-lg" />
+                    </button>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           ))}
