@@ -164,7 +164,7 @@ export default function HomePage() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search prayer categories (faith, healing, protection...)"
+                placeholder="Search prayer categories "
                 className="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                 value={searchTerm}
                 onChange={handleSearch}
