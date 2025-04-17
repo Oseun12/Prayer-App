@@ -35,10 +35,10 @@ interface BookmarkResponse {
 }
 
 export async function GET() {
-  console.log('Received GET request to /api/bookmarks');
+  // console.log('Received GET request to /api/bookmarks');
   try {
     const { user } = await initBookmarkRequest();
-    console.log('Fetching bookmarks for user:', user.email);
+    // console.log('Fetching bookmarks for user:', user.email);
 
     const bookmarks = await Bookmark.find({ userId: user._id }).lean();
     const responseData: BookmarkResponse[] = bookmarks.map(bookmark => ({
@@ -49,7 +49,7 @@ export async function GET() {
       ...(bookmark.updatedAt && { updatedAt: bookmark.updatedAt.toISOString() })
     }));
 
-    console.log(`Found ${responseData.length} bookmarks`);
+    // console.log(`Found ${responseData.length} bookmarks`);
     return NextResponse.json(responseData);
   } catch (error) {
     console.error('GET error:', error);
@@ -112,7 +112,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (result.deletedCount === 0) {
-      console.log('Bookmark not found');
+      // console.log('Bookmark not found');
       return NextResponse.json(
         { message: 'Bookmark not found' },
         { status: 404 }
