@@ -3,8 +3,10 @@ import { FaCross, FaHandsHelping, FaHeart, FaDove, FaStar, FaPrayingHands, FaBib
 import { GiAngelWings, GiPrayer, GiHealing, GiSpellBook } from "react-icons/gi";
 import { RiMentalHealthLine } from "react-icons/ri";
 import { BsHeartPulse } from "react-icons/bs";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function HomePage() {
+  
   const prayerCategories = [
     {
       id: 'faith',
@@ -131,6 +133,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       {/* Animated Header */}
+      <Analytics />
       <header className="relative overflow-hidden bg-gradient-to-r from-indigo-900 to-purple-900 shadow-2xl">
         <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
