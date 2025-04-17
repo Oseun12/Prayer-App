@@ -4,8 +4,10 @@ import { GiAngelWings, GiPrayer, GiHealing, GiSpellBook } from "react-icons/gi";
 import { RiMentalHealthLine } from "react-icons/ri";
 import { BsHeartPulse } from "react-icons/bs";
 import { trackEvent } from "@/lib/gtag";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleCategoryClick = (categoryId: string) => {
     trackEvent("Prayer Category", "Click", categoryId);
@@ -134,6 +136,15 @@ export default function HomePage() {
     }
   ];
 
+  const filteredCategories = prayerCategories.filter(category => 
+    category.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    category.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       {/* Animated Header */}
@@ -147,6 +158,33 @@ export default function HomePage() {
           <p className="text-xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
             Spiritual nourishment through powerful prayers for every season of life
           </p>
+          
+
+          <div className="mt-8 w-full mx-auto">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search prayer categories (faith, healing, protection...)"
+                className="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <svg
+                className="absolute right-5 top-4 h-6 w-6 text-purple-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div>
+
           <div className="mt-8">
             <div className="inline-flex items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 hover:border-white/40 transition-all">
               <GiPrayer className="inline mr-3 text-purple-300 text-xl" />
@@ -162,7 +200,7 @@ export default function HomePage() {
       <main className="max-w-screen-2xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {/* Category Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {prayerCategories.map((category) => (
+          {filteredCategories.map((category) => (
             <div 
               key={category.id} 
               onClick={() => handleCategoryClick(category.id)}
@@ -171,6 +209,13 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+
+        {filteredCategories.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl text-purple-200 mb-2">No prayer categories found</h3>
+            <p className="text-purple-100">Try searching for &ldquo;faith&rdquo;, &ldquo;healing&rdquo;, or &ldquo;protection&rdquo;</p>
+          </div>
+        )}
 
         {/* Features Section */}
         <div className="mt-24 grid md:grid-cols-3 gap-8">
