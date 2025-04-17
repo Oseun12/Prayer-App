@@ -52,27 +52,29 @@ export default function PrayerCategoryClient({
     loadBookmarks();
   }, [session]);
 
-  const handleBookmark = async (prayerId: string) => {
-    if (!session?.user?.id) {
-      console.error('User not authenticated');
-      return;
-    }
+const handleBookmark = async (prayerId: string) => {
+  const anonymousId = localStorage.getItem("anonymousId") || 
+    Math.random().toString(36).substring(2, 15);
+  
+  if (!session?.user?.id) {
+    localStorage.setItem("anonymousId", anonymousId);
+  }
 
-    try {
-      await toggleBookmark(prayerId);
-      setBookmarkedPrayers((prev) => {
-        const newSet = new Set(prev);
-        if (newSet.has(prayerId)) {
-          newSet.delete(prayerId);
-        } else {
-          newSet.add(prayerId);
-        }
-        return newSet;
-      });
-    } catch (error) {
-      console.error('Bookmark error:', error);
-    }
-  };
+  try {
+    await toggleBookmark(prayerId, session?.user?.id ? undefined : anonymousId);
+    setBookmarkedPrayers((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(prayerId)) {
+        newSet.delete(prayerId);
+      } else {
+        newSet.add(prayerId);
+      }
+      return newSet;
+    });
+  } catch (error) {
+    console.error("Bookmark error:", error);
+  }
+};
 
   return (
     <div className={`min-h-screen bg-gradient-to-b ${gradientColors} text-gray-100`}>

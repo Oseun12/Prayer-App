@@ -1,65 +1,51 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import Bookmark from '@/models/Bookmark';
-import connectViaMongoose from '@/lib/mongodb';
-import { authOptions } from '@/lib/auth-config';
+// app/api/bookmarks/route.ts
+import { NextResponse } from "next/server";
+import Bookmark from "@/models/Bookmark";
+import connectViaMongoose from "@/lib/mongodb";
 
-export async function GET() {
-  await connectViaMongoose();
-  
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
-  }
+export const dynamic = "force-dynamic";
 
+async function parseRequestBody(req: Request) {
   try {
-    const bookmarks = await Bookmark.find({ userId: session.user.id });
-    return NextResponse.json(bookmarks);
+    return await req.json();
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to fetch bookmarks', details: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
-    );
+    console.error("JSON parse error:", error);
+    return null;
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   await connectViaMongoose();
   
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  const body = await parseRequestBody(req);
+  if (!body || !body.prayerId) {
     return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
+      { error: "prayerId is required" },
+      { status: 400 }
     );
   }
 
   try {
-    const { prayerId } = await request.json();
-    
-    if (!prayerId) {
-      return NextResponse.json(
-        { error: 'prayerId is required' },
-        { status: 400 }
-      );
-    }
+    const { prayerId, anonymousId } = body;
+    const { getServerSession } = await import("next-auth");
+    const { authOptions } = await import("../auth/[...nextauth]/route");
+    const session = await getServerSession(authOptions);
 
-    const userId = session.user.id;
+    // Generate anonymousId if not provided and no session exists
+    const userId = session?.user?.id || anonymousId || `anon-${crypto.randomUUID()}`;
+
     const existing = await Bookmark.findOne({ prayerId, userId });
-
     if (existing) {
       await Bookmark.deleteOne({ _id: existing._id });
       return NextResponse.json({ removed: true });
-    } else {
-      const bookmark = await Bookmark.create({ prayerId, userId });
-      return NextResponse.json(bookmark, { status: 201 });
     }
+
+    const bookmark = await Bookmark.create({ prayerId, userId });
+    return NextResponse.json(bookmark, { status: 201 });
   } catch (error) {
+    console.error("Bookmark error:", error);
     return NextResponse.json(
-      { error: 'Failed to update bookmark', details: error instanceof Error ? error.message : String(error) },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

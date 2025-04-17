@@ -15,4 +15,4 @@ const BookmarkSchema = new mongoose.Schema({
 BookmarkSchema.index({ prayerId: 1, userId: 1 }, { unique: true });
 
 export default mongoose.models.Bookmark || 
-       mongoose.model<IBookmark>('Bookmark', BookmarkSchema);
+  mongoose.model<IBookmark>('Bookmark', BookmarkSchema);

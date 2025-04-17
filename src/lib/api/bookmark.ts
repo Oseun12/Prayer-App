@@ -1,32 +1,36 @@
-// import { trackEvent } from '@/lib/gtag';
-
-export const toggleBookmark = async (prayerId: string) => {
+export const toggleBookmark = async (prayerId: string, anonymousId?: string) => {
   try {
-    const response = await fetch('/api/bookmarks', {
-      method: 'POST',
+    const response = await fetch("/api/bookmarks", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prayerId }),
+      body: JSON.stringify({ prayerId, anonymousId }),
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to update bookmark');
+      const error = await response.json();
+      throw new Error(error.error || "Failed to update bookmark");
     }
-    
     return await response.json();
   } catch (error) {
-    console.error('Bookmark error:', error);
+    console.error("Bookmark error:", error);
     throw error;
   }
 };
 
 export const fetchUserBookmarks = async () => {
-  const response = await fetch('/api/bookmarks');
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to fetch bookmarks');
+  try {
+    const response = await fetch("/api/bookmarks", {
+      credentials: "include",
+    });
+    
+    if (!response.ok) {
+      throw new Error("Failed to fetch bookmarks");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Fetch bookmarks error:", error);
+    throw error;
   }
-  return await response.json();
 };
