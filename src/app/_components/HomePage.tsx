@@ -3,8 +3,14 @@ import { FaCross, FaHandsHelping, FaHeart, FaDove, FaStar, FaPrayingHands, FaBib
 import { GiAngelWings, GiPrayer, GiHealing, GiSpellBook } from "react-icons/gi";
 import { RiMentalHealthLine } from "react-icons/ri";
 import { BsHeartPulse } from "react-icons/bs";
+import { trackEvent } from "../../lib/analytics";
 
 export default function HomePage() {
+
+  const handleCategoryClick = (categoryId: string) => {
+    trackEvent("Prayer Category", "Click", categoryId);
+  };
+  
   const prayerCategories = [
     {
       id: 'faith',
@@ -157,7 +163,12 @@ export default function HomePage() {
         {/* Category Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {prayerCategories.map((category) => (
-            <PrayerCategoryCard key={category.id} category={category} />
+            <div 
+              key={category.id} 
+              onClick={() => handleCategoryClick(category.id)}
+            >
+              <PrayerCategoryCard category={category} />
+            </div>
           ))}
         </div>
 
@@ -207,6 +218,17 @@ export default function HomePage() {
           <p className="text-white/80 mb-6">
             May the Lord bless you and keep you as you seek Him in prayer
           </p>
+          <div className="flex justify-center space-x-6 mb-4">
+            <a
+              href="https://your-profile-link.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/50 hover:text-white transition-colors"
+              onClick={() => trackEvent("Footer", "Profile Click", "Developer Link")}
+            >
+              Developer Profile
+            </a>
+          </div>
           <div className="text-sm text-white/50">
             © {new Date().getFullYear()} Divine Prayer Collection. All rights reserved.
           </div>

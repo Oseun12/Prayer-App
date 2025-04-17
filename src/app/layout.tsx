@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { initGA } from "@/lib/analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
   title: "Prayer Application",
   description: "Explore various prayer categories and powerful declarations.",
 };
+
+// Initialize GA 
+if (typeof window !== "undefined") {
+  initGA();
+}
 
 export default function RootLayout({
   children,
