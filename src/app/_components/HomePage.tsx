@@ -3,7 +3,7 @@ import { FaCross, FaHandsHelping, FaHeart, FaDove, FaStar, FaPrayingHands, FaBib
 import { GiAngelWings, GiPrayer, GiHealing, GiSpellBook } from "react-icons/gi";
 import { RiMentalHealthLine } from "react-icons/ri";
 import { BsHeartPulse } from "react-icons/bs";
-import { trackEvent } from "../../lib/analytics";
+import { trackEvent } from "@/lib/gtag";
 
 export default function HomePage() {
 
