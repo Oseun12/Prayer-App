@@ -2,21 +2,28 @@
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
-export default function GoogleAnalytics() {
+function GoogleAnalyticsTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_GA4_TRACKING_ID) {
-      const url = pathname + searchParams.toString();
-      window.gtag('config', process.env.NEXT_PUBLIC_GA4_TRACKING_ID, {
-        page_path: url,
-        debug_mode: true 
-      });
-    }
+    if (!process.env.NEXT_PUBLIC_GA4_TRACKING_ID) return;
+    
+    const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
+    window.gtag('config', process.env.NEXT_PUBLIC_GA4_TRACKING_ID, {
+      page_path: url,
+    });
   }, [pathname, searchParams]);
+
+  return null;
+}
+
+export default function GoogleAnalytics() {
+  if (!process.env.NEXT_PUBLIC_GA4_TRACKING_ID) {
+    return null;
+  }
 
   return (
     <>
@@ -29,9 +36,12 @@ export default function GoogleAnalytics() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${process.env.NEXT_PUBLIC_GA4_TRACKING_ID}');
         `}
       </Script>
+      
+      <Suspense fallback={null}>
+        <GoogleAnalyticsTracker />
+      </Suspense>
     </>
   );
 }
