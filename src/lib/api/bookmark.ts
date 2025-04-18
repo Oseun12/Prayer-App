@@ -20,15 +20,17 @@ export const toggleBookmark = async (prayerId: string, anonymousId?: string) => 
   }
 };
 
-export const fetchUserBookmarks = async () => {
+export const fetchUserBookmarks = async (anonymousId?: string) => {
   try {
-    const response = await fetch("/api/bookmarks", {
+    const url = anonymousId 
+      ? `/api/bookmarks?anonymousId=${anonymousId}`
+      : '/api/bookmarks';
+    
+    const response = await fetch(url, {
       credentials: "include",
     });
     
-    if (!response.ok) {
-      throw new Error("Failed to fetch bookmarks");
-    }
+    if (!response.ok) throw new Error("Failed to fetch bookmarks");
     return await response.json();
   } catch (error) {
     console.error("Fetch bookmarks error:", error);
