@@ -21,7 +21,7 @@ export default async function BookmarksPage() {
   return (
     <div className="p-4">
       <h2>My Bookmarks</h2>
-      {/* Render bookmarks here */}
+      {bookmarks}
     </div>
   );
 }

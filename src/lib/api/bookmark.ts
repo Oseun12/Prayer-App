@@ -6,6 +6,7 @@ export const toggleBookmark = async (prayerId: string, anonymousId?: string) => 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ prayerId, anonymousId }),
+      credentials: "include",
     });
 
     if (!response.ok) {

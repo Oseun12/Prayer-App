@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   await connectViaMongoose();
   
   const body = await parseRequestBody(req);
-  if (!body || !body.prayerId) {
+  if (!body?.prayerId) {
     return NextResponse.json(
       { error: "prayerId is required" },
       { status: 400 }
@@ -31,16 +31,27 @@ export async function POST(req: Request) {
     const { authOptions } = await import("../auth/[...nextauth]/route");
     const session = await getServerSession(authOptions);
 
-    // Generate anonymousId if not provided and no session exists
-    const userId = session?.user?.id || anonymousId || `anon-${crypto.randomUUID()}`;
+    // Validate ID
+    const userId = session?.user?.id || anonymousId;
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Invalid user identification" },
+        { status: 400 }
+      );
+    }
 
+    // Toggle bookmark
     const existing = await Bookmark.findOne({ prayerId, userId });
     if (existing) {
       await Bookmark.deleteOne({ _id: existing._id });
       return NextResponse.json({ removed: true });
     }
 
-    const bookmark = await Bookmark.create({ prayerId, userId });
+    const bookmark = await Bookmark.create({ 
+      prayerId, 
+      userId,
+      createdAt: new Date() 
+    });
     return NextResponse.json(bookmark, { status: 201 });
   } catch (error) {
     console.error("Bookmark error:", error);

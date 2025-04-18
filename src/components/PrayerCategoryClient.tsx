@@ -52,29 +52,29 @@ export default function PrayerCategoryClient({
     loadBookmarks();
   }, [session]);
 
-const handleBookmark = async (prayerId: string) => {
-  const anonymousId = localStorage.getItem("anonymousId") || 
-    Math.random().toString(36).substring(2, 15);
-  
-  if (!session?.user?.id) {
-    localStorage.setItem("anonymousId", anonymousId);
-  }
+  const handleBookmark = async (prayerId: string) => {
+    const anonymousId = localStorage.getItem("anonymousId") || 
+      Math.random().toString(36).substring(2, 15);
+    
+    if (!session?.user?.id) {
+      localStorage.setItem("anonymousId", anonymousId);
+    }
 
-  try {
-    await toggleBookmark(prayerId, session?.user?.id ? undefined : anonymousId);
-    setBookmarkedPrayers((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(prayerId)) {
-        newSet.delete(prayerId);
-      } else {
-        newSet.add(prayerId);
-      }
-      return newSet;
-    });
-  } catch (error) {
-    console.error("Bookmark error:", error);
-  }
-};
+    try {
+      await toggleBookmark(prayerId, session?.user?.id ? undefined : anonymousId);
+      setBookmarkedPrayers((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(prayerId)) {
+          newSet.delete(prayerId);
+        } else {
+          newSet.add(prayerId);
+        }
+        return newSet;
+      });
+    } catch (error) {
+      console.error("Bookmark error:", error);
+    }
+  };
 
   return (
     <div className={`min-h-screen bg-gradient-to-b ${gradientColors} text-gray-100`}>
@@ -119,16 +119,19 @@ const handleBookmark = async (prayerId: string) => {
                   )}
 
                   <div className={`flex gap-3 ${prayer.verse ? '' : 'ml-auto'}`}>
-                    <button
-                      onClick={() => handleBookmark(prayer.id)}
-                      className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors ${
-                        bookmarkedPrayers.has(prayer.id) ? 'bg-opacity-40' : ''
-                      }`}
-                      disabled={!session?.user?.id}
-                      aria-label={bookmarkedPrayers.has(prayer.id) ? 'Remove bookmark' : 'Bookmark this prayer'}
-                    >
-                      <IoBookmarkOutline className={`text-lg ${bookmarkedPrayers.has(prayer.id) ? 'fill-current' : ''}`} />
-                    </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleBookmark(prayer.id);
+                    }}
+                    className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors ${
+                      bookmarkedPrayers.has(prayer.id) ? 'bg-opacity-40' : ''
+                    } relative z-10 cursor-pointer select-none`}
+                    aria-label={bookmarkedPrayers.has(prayer.id) ? 'Remove bookmark' : 'Bookmark this prayer'}
+                  >
+                    <IoBookmarkOutline className={`text-lg ${bookmarkedPrayers.has(prayer.id) ? 'fill-current' : ''}`} />
+                  </button>
                     <button
                       className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors`}
                       aria-label="Mark as prayed"
