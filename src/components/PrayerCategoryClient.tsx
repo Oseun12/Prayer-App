@@ -7,6 +7,8 @@ import PrayerPoint from '@/components/PrayerPoint';
 import { PiHandsPrayingLight } from 'react-icons/pi';
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { fetchUserBookmarks, toggleBookmark } from '@/lib/api/bookmark';
+import { BsBookmarkCheckFill } from "react-icons/bs";
+
 
 interface Prayer {
   id: string;
@@ -130,7 +132,11 @@ export default function PrayerCategoryClient({
                     } relative z-10 cursor-pointer select-none`}
                     aria-label={bookmarkedPrayers.has(prayer.id) ? 'Remove bookmark' : 'Bookmark this prayer'}
                   >
-                    <IoBookmarkOutline className={`text-lg ${bookmarkedPrayers.has(prayer.id) ? 'fill-current' : ''}`} />
+                    {bookmarkedPrayers.has(prayer.id) ? (
+                      <BsBookmarkCheckFill className={`text-lg ${accentColor}`} />
+                    ) : (
+                      <IoBookmarkOutline className="text-lg" />
+                    )}
                   </button>
                     <button
                       className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors`}
