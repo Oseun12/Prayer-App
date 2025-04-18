@@ -1,4 +1,3 @@
-// app/api/bookmarks/route.ts
 import { NextResponse } from "next/server";
 import Bookmark from "@/models/Bookmark";
 import connectViaMongoose from "@/lib/mongodb";
