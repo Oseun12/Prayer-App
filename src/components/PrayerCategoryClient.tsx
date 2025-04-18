@@ -14,6 +14,7 @@ interface Prayer {
   id: string;
   content: string;
   verse?: string;
+  prayed?: boolean;
 }
 
 interface PrayerCategoryClientProps {
@@ -34,6 +35,7 @@ export default function PrayerCategoryClient({
 }: PrayerCategoryClientProps) {
   const { data: session } = useSession();
   const [bookmarkedPrayers, setBookmarkedPrayers] = useState<Set<string>>(new Set());
+  const [prayedPrayers, setPrayedPrayers] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const loadBookmarks = async () => {
@@ -64,6 +66,17 @@ export default function PrayerCategoryClient({
     loadBookmarks();
   }, [session]);
 
+  useEffect(() => {
+    const savedPrayed = localStorage.getItem('prayedPrayers');
+    if (savedPrayed) {
+      setPrayedPrayers(new Set(JSON.parse(savedPrayed)));
+    }
+  }, []);
+  
+  useEffect(() => {
+    localStorage.setItem('prayedPrayers', JSON.stringify(Array.from(prayedPrayers)));
+  }, [prayedPrayers]);
+
   const handleBookmark = async (prayerId: string) => {
     const anonymousId = localStorage.getItem("anonymousId") || 
       Math.random().toString(36).substring(2, 15);
@@ -85,6 +98,34 @@ export default function PrayerCategoryClient({
       });
     } catch (error) {
       console.error("Bookmark error:", error);
+    }
+  };
+
+  const handleMarkAsPrayed = async (prayerId: string) => {
+    try {
+      setPrayedPrayers(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(prayerId)) {
+          newSet.delete(prayerId);
+        } else {
+          newSet.add(prayerId);
+        }
+        return newSet;
+      });
+  
+    
+      
+    } catch (error) {
+      console.error("Prayer marking error:", error);
+      setPrayedPrayers((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(prayerId)) {
+          newSet.delete(prayerId);
+        } else {
+          newSet.add(prayerId);
+        }
+        return newSet;
+      });
     }
   };
 
@@ -148,12 +189,31 @@ export default function PrayerCategoryClient({
                       <IoBookmarkOutline className="text-lg" />
                     )}
                   </button>
-                    <button
-                      className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors`}
-                      aria-label="Mark as prayed"
-                    >
-                      <PiHandsPrayingLight className="text-lg" />
-                    </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleMarkAsPrayed(prayer.id);
+                    }}
+                    className={`
+                      p-2 rounded-full 
+                      ${prayedPrayers.has(prayer.id) 
+                        ? `${accentColor.replace('text', 'bg')} bg-opacity-40`
+                        : `${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30`
+                      } 
+                      transition-colors
+                      cursor-pointer
+                      relative z-50
+                      pointer-events-auto
+                    `}
+                    aria-label={prayedPrayers.has(prayer.id) ? 'Unmark as prayed' : 'Mark as prayed'}
+                  >
+                    <PiHandsPrayingLight className={`
+                      text-lg 
+                      ${prayedPrayers.has(prayer.id) ? accentColor : 'text-current'}
+                      pointer-events-none
+                    `} />
+                  </button>
                   </div>
                 </div>
               </div>
