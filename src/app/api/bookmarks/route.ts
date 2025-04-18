@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import Bookmark from "@/models/Bookmark";
 import connectViaMongoose from "@/lib/mongodb";
+import { authOptions } from "../../../lib/auth-config";
+import { getServerSession } from "next-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +58,29 @@ export async function POST(req: Request) {
     console.error("Bookmark error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: Request) {
+  await connectViaMongoose();
+  
+  const { searchParams } = new URL(req.url);
+  const anonymousId = searchParams.get('anonymousId');
+  const session = await getServerSession(authOptions);
+
+  try {
+    const userId = session?.user?.id || anonymousId;
+    if (!userId) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    const bookmarks = await Bookmark.find({ userId });
+    return NextResponse.json(bookmarks);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to fetch bookmarks", error },
       { status: 500 }
     );
   }
