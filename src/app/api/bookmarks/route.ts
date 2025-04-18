@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   try {
     const { prayerId, anonymousId } = body;
     const { getServerSession } = await import("next-auth");
-    const { authOptions } = await import("../auth/[...nextauth]/route");
+    const { authOptions } = await import("../../../lib/auth-config");
     const session = await getServerSession(authOptions);
 
     // Validate ID
