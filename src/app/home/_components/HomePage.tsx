@@ -1,4 +1,4 @@
-import PrayerCategoryCard from "../../components/PrayerCategoryCard";
+import PrayerCategoryCard from "../../../components/PrayerCategoryCard";
 import { FaCross, FaHandsHelping, FaHeart, FaDove, FaStar, FaPrayingHands, FaBible, FaPeace } from "react-icons/fa";
 import { GiAngelWings, GiPrayer, GiHealing, GiSpellBook, GiSpikedHalo, GiBabyBottle, GiNightSleep, GiDiamondRing, GiTakeMyMoney, GiFruitBowl, GiBriefcase, GiBrain, GiMoneyStack, GiMeditation, GiMuscleUp, GiBinoculars, GiShield, GiLifeBar, GiStairsGoal, GiNetworkBars, GiCrackedGlass, GiPathDistance, GiSunPriest } from "react-icons/gi";
 import { RiMentalHealthLine } from "react-icons/ri";
