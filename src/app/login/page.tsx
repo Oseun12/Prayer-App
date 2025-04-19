@@ -13,7 +13,7 @@ export default function LoginPage() {
         
         <div className="p-8">
           <button
-            onClick={() => signIn('google', { callbackUrl: '/bookmarks' })}
+            onClick={() => signIn('google')}
             className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-lg py-3 px-4 
              text-gray-700 font-medium hover:bg-gray-50 transition-all shadow-sm"
           >
