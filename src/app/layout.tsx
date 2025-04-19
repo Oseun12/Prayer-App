@@ -33,7 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
+          {/* <DashboardLayout> */}
           {children}
+          {/* </DashboardLayout> */}
           <GoogleAnalytics/>
         </Providers>
       </body>

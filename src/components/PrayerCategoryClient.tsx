@@ -15,6 +15,7 @@ interface Prayer {
   content: string;
   verse?: string;
   prayed?: boolean;
+  categorySlug?: string;
 }
 
 interface PrayerCategoryClientProps {
@@ -32,6 +33,7 @@ export default function PrayerCategoryClient({
   gradientColors,
   accentColor,
   categoryIcon,
+  slug,
 }: PrayerCategoryClientProps) {
   const { data: session } = useSession();
   const [bookmarkedPrayers, setBookmarkedPrayers] = useState<Set<string>>(new Set());
@@ -47,7 +49,11 @@ export default function PrayerCategoryClient({
             const response = await fetch(`/api/bookmarks?anonymousId=${anonymousId}`);
             if (response.ok) {
               const bookmarks = await response.json();
-              const ids = new Set<string>(bookmarks.map((b: { prayerId: string }) => b.prayerId));
+              const ids = new Set<string>(
+                bookmarks
+                  .filter((b: { prayerId: string }) => b.prayerId.startsWith(`${slug}-`))
+                  .map((b: { prayerId: string }) => b.prayerId)
+              );
               setBookmarkedPrayers(ids);
             }
           }
@@ -56,7 +62,11 @@ export default function PrayerCategoryClient({
         
         // For authenticated users
         const bookmarks = await fetchUserBookmarks();
-        const ids = new Set<string>(bookmarks.map((b: { prayerId: string }) => b.prayerId));
+        const ids = new Set<string>(
+          bookmarks
+            .filter((b: { prayerId: string }) => b.prayerId.startsWith(`${slug}-`))
+            .map((b: { prayerId: string }) => b.prayerId)
+        );
         setBookmarkedPrayers(ids);
       } catch (error) {
         console.error('Failed to load bookmarks:', error);
@@ -64,7 +74,7 @@ export default function PrayerCategoryClient({
     };
     
     loadBookmarks();
-  }, [session]);
+  }, [session, slug]);
 
   useEffect(() => {
     const savedPrayed = localStorage.getItem('prayedPrayers');
@@ -78,6 +88,7 @@ export default function PrayerCategoryClient({
   }, [prayedPrayers]);
 
   const handleBookmark = async (prayerId: string) => {
+    const uniquePrayerId = `${slug}-${prayerId}`;
     const anonymousId = localStorage.getItem("anonymousId") || 
       Math.random().toString(36).substring(2, 15);
     
@@ -86,13 +97,13 @@ export default function PrayerCategoryClient({
     }
 
     try {
-      await toggleBookmark(prayerId, session?.user?.id ? undefined : anonymousId);
+      await toggleBookmark(uniquePrayerId, session?.user?.id ? undefined : anonymousId);
       setBookmarkedPrayers((prev) => {
         const newSet = new Set(prev);
-        if (newSet.has(prayerId)) {
-          newSet.delete(prayerId);
+        if (newSet.has(uniquePrayerId)) {
+          newSet.delete(uniquePrayerId);
         } else {
-          newSet.add(prayerId);
+          newSet.add(uniquePrayerId);
         }
         return newSet;
       });
@@ -112,8 +123,6 @@ export default function PrayerCategoryClient({
         }
         return newSet;
       });
-  
-    
       
     } catch (error) {
       console.error("Prayer marking error:", error);
@@ -181,9 +190,9 @@ export default function PrayerCategoryClient({
                     className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors ${
                       bookmarkedPrayers.has(prayer.id) ? 'bg-opacity-40' : ''
                     } relative z-10 cursor-pointer select-none`}
-                    aria-label={bookmarkedPrayers.has(prayer.id) ? 'Remove bookmark' : 'Bookmark this prayer'}
+                    aria-label={bookmarkedPrayers.has(`${slug}-${prayer.id}`) ? 'Remove bookmark' : 'Bookmark this prayer'}
                   >
-                    {bookmarkedPrayers.has(prayer.id) ? (
+                    {bookmarkedPrayers.has(`${slug}-${prayer.id}`) ? (
                       <BsBookmarkCheckFill className={`text-lg ${accentColor}`} />
                     ) : (
                       <IoBookmarkOutline className="text-lg" />
