@@ -505,11 +505,10 @@ export default function HomePage() {
           </p>
           <div className="flex justify-center space-x-6 mb-4">
             <a
-              href="https://your-profile-link.com"
+              href="https://www.linkedin.com/in/mary-salau-83b726256"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/50 hover:text-white transition-colors"
-              onClick={() => trackEvent("Footer", "Profile Click", "Developer Link")}
             >
               Developer Profile
             </a>
