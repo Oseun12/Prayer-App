@@ -8,7 +8,7 @@ import { PiHandsPrayingLight } from 'react-icons/pi';
 import { IoBookmarkOutline, IoShareSocialOutline } from 'react-icons/io5';
 import { fetchUserBookmarks, toggleBookmark } from '@/lib/api/bookmark';
 import { BsBookmarkCheckFill } from "react-icons/bs";
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 
 
 interface Prayer {
@@ -40,7 +40,7 @@ export default function PrayerCategoryClient({
   const [bookmarkedPrayers, setBookmarkedPrayers] = useState<Set<string>>(new Set());
   const [prayedPrayers, setPrayedPrayers] = useState<Set<string>>(new Set());
   const [sharingPrayer, setSharingPrayer] = useState<Prayer | null>(null);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  // const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const prayerCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -150,44 +150,44 @@ export default function PrayerCategoryClient({
     setSharingPrayer(null);
   };
 
-  const generatePrayerImage = async () => {
-    if (!prayerCardRef.current || !sharingPrayer) return;
+  // const generatePrayerImage = async () => {
+  //   if (!prayerCardRef.current || !sharingPrayer) return;
     
-    setIsGeneratingImage(true);
-    try {
-      const canvas = await html2canvas(prayerCardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        logging: false,
-        useCORS: true,
-      });
+  //   setIsGeneratingImage(true);
+  //   try {
+  //     const canvas = await html2canvas(prayerCardRef.current, {
+  //       backgroundColor: null,
+  //       scale: 2,
+  //       logging: false,
+  //       useCORS: true,
+  //     });
       
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const file = new File([blob], 'prayer.png', { type: 'image/png' });
-          const data = {
-            files: [file],
-            title: `${categoryTitle} Prayer`,
-            text: sharingPrayer.content,
-          };
+  //     canvas.toBlob((blob) => {
+  //       if (blob) {
+  //         const file = new File([blob], 'prayer.png', { type: 'image/png' });
+  //         const data = {
+  //           files: [file],
+  //           title: `${categoryTitle} Prayer`,
+  //           text: sharingPrayer.content,
+  //         };
           
-          if (navigator.canShare && navigator.canShare(data)) {
-            navigator.share(data).catch(console.error);
-          } else {
-            // Fallback: Download the image
-            const link = document.createElement('a');
-            link.download = 'prayer.png';
-            link.href = URL.createObjectURL(blob);
-            link.click();
-          }
-        }
-      }, 'image/png');
-    } catch (error) {
-      console.error('Error generating image:', error);
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
+  //         if (navigator.canShare && navigator.canShare(data)) {
+  //           navigator.share(data).catch(console.error);
+  //         } else {
+  //           // Fallback: Download the image
+  //           const link = document.createElement('a');
+  //           link.download = 'prayer.png';
+  //           link.href = URL.createObjectURL(blob);
+  //           link.click();
+  //         }
+  //       }
+  //     }, 'image/png');
+  //   } catch (error) {
+  //     console.error('Error generating image:', error);
+  //   } finally {
+  //     setIsGeneratingImage(false);
+  //   }
+  // };
 
   return (
     <div className={`min-h-screen bg-gradient-to-b ${gradientColors} text-gray-100`}>
@@ -350,7 +350,7 @@ export default function PrayerCategoryClient({
                 <div className="flex-1 flex items-center justify-center">
                   {/* Prayer Text - now perfectly centered */}
                   <p className="text-2xl font-serif font-bold leading-relaxed px-4">
-                    {sharingPrayer.content}
+                    {sharingPrayer.content?.toUpperCase()}
                   </p>
                 </div>
                 
@@ -374,7 +374,7 @@ export default function PrayerCategoryClient({
             </div>
             
             {/* Share Button */}
-            <button
+            {/* <button
               onClick={generatePrayerImage}
               disabled={isGeneratingImage}
               className={`mt-6 w-full py-3 px-4 rounded-lg bg-white text-black hover:opacity-90 transition-all flex items-center justify-center gap-2 font-serif font-medium`}
@@ -393,7 +393,7 @@ export default function PrayerCategoryClient({
                   Share This Prayer
                 </>
               )}
-            </button>
+            </button> */}
           </div>
         </div>
       )}
