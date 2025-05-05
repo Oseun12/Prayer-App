@@ -1,13 +1,14 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/components/BackButton';
 import PrayerPoint from '@/components/PrayerPoint';
 import { PiHandsPrayingLight } from 'react-icons/pi';
-import { IoBookmarkOutline } from 'react-icons/io5';
+import { IoBookmarkOutline, IoShareSocialOutline } from 'react-icons/io5';
 import { fetchUserBookmarks, toggleBookmark } from '@/lib/api/bookmark';
 import { BsBookmarkCheckFill } from "react-icons/bs";
+import html2canvas from 'html2canvas';
 
 
 interface Prayer {
@@ -38,6 +39,9 @@ export default function PrayerCategoryClient({
   const { data: session } = useSession();
   const [bookmarkedPrayers, setBookmarkedPrayers] = useState<Set<string>>(new Set());
   const [prayedPrayers, setPrayedPrayers] = useState<Set<string>>(new Set());
+  const [sharingPrayer, setSharingPrayer] = useState<Prayer | null>(null);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const prayerCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadBookmarks = async () => {
@@ -138,6 +142,53 @@ export default function PrayerCategoryClient({
     }
   };
 
+  const handleSharePrayer = (prayer: Prayer) => {
+    setSharingPrayer(prayer);
+  };
+
+  const handleCloseShareModal = () => {
+    setSharingPrayer(null);
+  };
+
+  const generatePrayerImage = async () => {
+    if (!prayerCardRef.current || !sharingPrayer) return;
+    
+    setIsGeneratingImage(true);
+    try {
+      const canvas = await html2canvas(prayerCardRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        logging: false,
+        useCORS: true,
+      });
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const file = new File([blob], 'prayer.png', { type: 'image/png' });
+          const data = {
+            files: [file],
+            title: `${categoryTitle} Prayer`,
+            text: sharingPrayer.content,
+          };
+          
+          if (navigator.canShare && navigator.canShare(data)) {
+            navigator.share(data).catch(console.error);
+          } else {
+            // Fallback: Download the image
+            const link = document.createElement('a');
+            link.download = 'prayer.png';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+          }
+        }
+      }, 'image/png');
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
   return (
     <div className={`min-h-screen bg-gradient-to-b ${gradientColors} text-gray-100`}>
       {/* Gradient overlay */}
@@ -223,6 +274,18 @@ export default function PrayerCategoryClient({
                       pointer-events-none
                     `} />
                   </button>
+
+                  <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSharePrayer(prayer);
+                      }}
+                      className={`p-2 rounded-full ${accentColor.replace('text', 'bg')} bg-opacity-20 hover:bg-opacity-30 transition-colors relative z-10 cursor-pointer select-none`}
+                      aria-label="Share this prayer"
+                    >
+                      <IoShareSocialOutline className="text-lg" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -243,14 +306,97 @@ export default function PrayerCategoryClient({
       </main>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-gray-500 text-sm border-t border-gray-800/50">
-        <p className="italic">&ldquo;The prayer of a righteous person is powerful and effective.&rdquo; — James 5:16</p>
+      <footer className="py-8 text-center text-white text-sm border-t border-gray-800/50">
+        <p className="italic ">&ldquo;The prayer of a righteous person is powerful and effective.&rdquo; — James 5:16</p>
       </footer>
 
       {/* Decorative icon */}
       <div className={`fixed bottom-6 right-6 hidden lg:block text-3xl opacity-20 ${accentColor}`}>
         {categoryIcon}
       </div>
+
+      {/* Share Prayer Modal */}
+      {sharingPrayer && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="relative max-w-md w-full">
+            {/* Close button */}
+            <button
+              onClick={handleCloseShareModal}
+              className="absolute -top-3 -right-3 p-2 rounded-full bg-white hover:opacity-90 transition-opacity z-50 shadow-lg"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+            
+            {/* Prayer Card */}
+            <div 
+              ref={prayerCardRef}
+              className="relative rounded-lg overflow-hidden shadow-xl w-full h-[400px] flex flex-col p-6 text-center"
+              style={{
+                backgroundImage: "url('https://images.unsplash.com/photo-1509023464722-18d996393ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                color: "#ffffff",
+                textShadow: "1px 1px 3px rgba(0,0,0,0.8)"
+              }}
+            >
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/40"></div>
+              
+              {/* Content */}
+              <div className="relative z-10 h-full flex flex-col">
+                {/* Flexible spacer - pushes content to center */}
+                <div className="flex-1 flex items-center justify-center">
+                  {/* Prayer Text - now perfectly centered */}
+                  <p className="text-2xl font-serif font-bold leading-relaxed px-4">
+                    {sharingPrayer.content}
+                  </p>
+                </div>
+                
+                {/* Verse and Footer - stays at bottom */}
+                <div className="mt-auto">
+                  <p className="text-lg font-bold font-serif mb-2">
+                    {sharingPrayer.verse?.toUpperCase()}
+                  </p>
+                  
+                  {/* Decorative line */}
+                  <div className="w-16 h-0.5 bg-white mx-auto mb-3"></div>
+                  
+                  {/* Footer */}
+                  <div className="flex items-center justify-center gap-2 text-sm">
+                    <span>Prayer Points</span>
+                    <div className="w-0.5 h-4 bg-white"></div>
+                    <span>{categoryTitle}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Share Button */}
+            <button
+              onClick={generatePrayerImage}
+              disabled={isGeneratingImage}
+              className={`mt-6 w-full py-3 px-4 rounded-lg bg-white text-black hover:opacity-90 transition-all flex items-center justify-center gap-2 font-serif font-medium`}
+            >
+              {isGeneratingImage ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creating Image...
+                </>
+              ) : (
+                <>
+                  <IoShareSocialOutline className="text-xl" />
+                  Share This Prayer
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
