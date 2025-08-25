@@ -188,6 +188,17 @@ export default function PrayerCategoryClient({
   //     setIsGeneratingImage(false);
   //   }
   // };
+  // Add this function to calculate dynamic font size
+const calculateFontSize = (text: string) => {
+  const length = text.length;
+  
+  if (length > 300) return "1rem";      // Very long text
+  if (length > 200) return "1.25rem";   // Long text
+  if (length > 100) return "1.5rem";    // Medium text
+  if (length > 50) return "1.75rem";    // Short text
+  
+  return "2rem";                        // Very short text
+};
 
   return (
     <div className={`min-h-screen bg-gradient-to-b ${gradientColors} text-gray-100`}>
@@ -332,36 +343,41 @@ export default function PrayerCategoryClient({
             {/* Prayer Card */}
             <div 
               ref={prayerCardRef}
-              className="relative rounded-lg overflow-hidden shadow-xl w-full h-[400px] flex flex-col p-6 text-center"
+              className="relative rounded-2xl overflow-hidden shadow-2xl w-full h-[450px] flex flex-col p-8 text-center"
               style={{
-                backgroundImage: "url('https://images.unsplash.com/photo-1509023464722-18d996393ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')",
+                backgroundImage: "url('/images/white-background.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 color: "#ffffff",
-                textShadow: "1px 1px 3px rgba(0,0,0,0.8)"
               }}
             >
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/40"></div>
+              {/* Gradient overlay for better text readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40"></div>
               
               {/* Content */}
               <div className="relative z-10 h-full flex flex-col">
-                {/* Flexible spacer - pushes content to center */}
-                <div className="flex-1 flex items-center justify-center">
-                  {/* Prayer Text - now perfectly centered */}
-                  <p className="text-2xl font-serif font-bold leading-relaxed px-4">
-                    {sharingPrayer.content?.toUpperCase()}
+                {/* Prayer Text with dynamic sizing */}
+                <div className="flex-1 flex items-center justify-center px-4 py-6">
+                  <p 
+                    className="font-serif font-bold leading-tight px-4 text-white"
+                    style={{
+                      fontSize: calculateFontSize(sharingPrayer.content), 
+                      textShadow: "2px 6px 16px rgba(0,0,0,0.7)",
+                      lineHeight: "1.3"
+                    }}
+                  >
+                    {sharingPrayer.content}
                   </p>
                 </div>
                 
-                {/* Verse and Footer - stays at bottom */}
+                {/* Verse and Footer */}
                 <div className="mt-auto">
-                  <p className="text-lg font-bold font-serif mb-2">
-                    {sharingPrayer.verse?.toUpperCase()}
-                  </p>
-                  
-                  {/* Decorative line */}
-                  <div className="w-16 h-0.5 bg-white mx-auto mb-3"></div>
+                    <p className="text-lg font-bold font-serif mb-2">
+                      {sharingPrayer.verse?.toUpperCase()}
+                    </p>
+                    
+                    {/* Decorative line */}
+                    <div className="w-16 h-0.5 bg-white mx-auto mb-3"></div>
                   
                   {/* Footer */}
                   <div className="flex items-center justify-center gap-2 text-sm">

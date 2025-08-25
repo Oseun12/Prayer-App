@@ -171,7 +171,7 @@ export const allPrayers = {
     'peace': 'text-cyan-300',
     'family': 'text-fuchsia-300',
     'forgiveness': 'text-yellow-300',
-    'anxiety': 'text-white',
+    'anxiety': 'text-cyan-400',
     'blessing': 'text-yellow-300',
     'business': 'text-cyan-300',
     'children': 'text-fuchsia-300',
